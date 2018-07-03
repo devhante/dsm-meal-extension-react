@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import FontSizeButton from './FontSizeButton';
+import CurrentDate from './CurrentDate';
 import './MealList.css';
 
 import back from './back-white.png';
@@ -9,10 +10,29 @@ import close from './close-white.png';
 import salmon from './salmon-small.png';
 
 class MealList extends Component {
-
+    
     state = {
         date: "2018-01-01",
         fontSize: "12px"
+    }
+
+    constructor() {
+        super();
+
+        let dateObject = new Date();
+
+        let year = dateObject.getFullYear().toString();
+        let month = (dateObject.getMonth() + 1).toString();
+        let date = dateObject.getDate().toString();
+
+        month = month.length == 1 ? "0" + month : month;
+        date = date.length == 1 ? "0" + date : date;
+
+        let dateString = `${year}-${month}-${date}`;
+
+        this.state.date = dateString;
+        this.state.fontSize = "12px";
+        this.changeHtmlFontSize(this.state.fontSize);
     }
 
     setFontSize = (value) => {
@@ -46,7 +66,7 @@ class MealList extends Component {
                     <div id="MealList-content">
                         <div id="MealList-content-header">
                             <img src={back} alt="Yesterday Button" className="button" id="MealList-button-yesterday" />
-                            <span id="MealList-currentDate">로딩중...</span>
+                            <CurrentDate date={this.state.date} />
                             <img src={next} alt="Tomorrow Button" className="button" id="MealList-button-tomorrow" />
                         </div>
 

@@ -63,12 +63,6 @@ ul {
     left: 0;
 }
 
-#MealList-button-size {
-    margin-top: -2.5rem;
-    float: right;
-    margin-right: 0.75rem;
-}
-
 #MealList-content-header {
     height: 3rem;
     line-height: 3rem;

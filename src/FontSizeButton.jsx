@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './FontSizeButton.css';
 
 class FontSizeButton extends Component {
 
@@ -7,10 +8,8 @@ class FontSizeButton extends Component {
     }
 
     increaseSize = () => {
-        console.log("1: " + this.props.getFontSize());
         let newFontSize = this.getLargerFontSize(this.props.getFontSize());
         this.props.setFontSize(newFontSize);
-        console.log("2: " + this.props.getFontSize());
     }
 
     getLargerFontSize = (value) => {
@@ -26,9 +25,9 @@ class FontSizeButton extends Component {
 
     render() {
         return (
-            <div>
-                <span className="button" id="MealList-button-size" onClick={this.onClickfontSizeButton}>{this.props.getFontSize()}</span>
-            </div>
+            <React.Fragment>
+                <span className="button FontSizeButton" onClick={this.onClickfontSizeButton}>{this.props.getFontSize()}</span>
+            </React.Fragment>
         );
     }
 }
