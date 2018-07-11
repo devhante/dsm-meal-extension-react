@@ -15,25 +15,63 @@ class MealList extends Component {
         menu: null
     }
 
-    constructor() {
-        super();
+    componentDidMount() {
         this.state.fontSize = this.getFontSizeFromLocalStorage();
         this.changeHtmlFontSize(this.state.fontSize);
-        this.getMenuFromAPI((arg) => {});
+        this.updateMenu();
     }
 
-    getMenuFromAPI(callback) {
-        const dateString = this.getDateStringByDateObject(this.state.date);
+    updateMenu() {
+        const newMenu = this.getMenuFromStorage(this.state.date);
+        if(newMenu == null) {
+            this.setMenuOfMonthToStorage(this.state.date);
+            this.getMenuFromAPI(this.state.date, (data) => {
+                this.setState({ menu: data });
+            });
+        } else {
+            this.setState({ menu: newMenu });
+        }
+    }
+
+    getMenuFromAPI(date, callback) {
+        const dateString = this.getDateStringByDateObject(date);
         const url = `http://dsm2015.cafe24.com/meal/${dateString}`;
 
         axios.get(url)
         .then(response => {
-            const data = JSON.parse(JSON.stringify(response.data));
-            this.setState({ menu: data }, callback(this.state.menu)); 
+            const menu = JSON.parse(JSON.stringify(response.data));
+            callback(menu);
         })
         .catch(err => {
             console.log(err);
         })
+    }
+
+    getMenuFromStorage(date) {
+        const key = this.getDateStringByDateObject(date);
+        const menu = JSON.parse(localStorage.getItem(key));
+        return menu;
+    }
+
+    setMenuOfMonthToStorage(date) {
+        let key = this.getFirstDayOfMonth(date);
+        while(key.getMonth() == date.getMonth()) {
+            let dateObject = new Date(key);
+            this.getMenuFromAPI(dateObject, (menu) => {
+                this.setMenuToStorage(dateObject, menu);
+            });
+            key.setDate(key.getDate() + 1);
+        }
+    }
+
+    setMenuToStorage(date, menu) {
+        const key = this.getDateStringByDateObject(date);
+        const value = JSON.stringify(menu);
+        localStorage.setItem(key, value);
+    }
+
+    getFirstDayOfMonth(date) {
+        return new Date(date.getFullYear(), date.getMonth(), 1);
     }
 
     getDateStringByDateObject = (dateObject) => {
@@ -45,14 +83,6 @@ class MealList extends Component {
 
         let dateString = `${year}-${month}-${date}`;
         return dateString;
-    }
-
-    getDateObjectByDateString = (dateString) => {
-        let year = dateString.substring(0, 4);
-        let month = dateString.substring(6, 7) - 1;
-        let date = dateString.substring(9, 10);
-        let dateObject = new Date(year, month, date);
-        return dateObject;
     }
 
     getFontSizeFromLocalStorage = () => {
@@ -76,10 +106,9 @@ class MealList extends Component {
     }
 
     setDate = (dateObj) => {
-        this.setState(
-            { date: dateObj },
-            () => this.getMenuFromAPI((arg) => {})
-        );
+        this.setState ({ date: dateObj }, () => {
+            this.updateMenu();
+        });
     }
     
     mealListStyle = {

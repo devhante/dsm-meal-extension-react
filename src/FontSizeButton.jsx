@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import './FontSizeButton.css';
 
 const FontSizeButton = function(props) {
 
