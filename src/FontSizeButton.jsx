@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import './FontSizeButton.css';
 
 const FontSizeButton = function(props) {
@@ -8,7 +9,7 @@ const FontSizeButton = function(props) {
     }
 
     const increaseSize = () => {
-        let newFontSize = getLargerFontSize(this.props.getFontSize());
+        let newFontSize = getLargerFontSize(props.fontSize);
         props.setFontSize(newFontSize);
         setFontSizeToLocalStorage(newFontSize);
     }
@@ -28,10 +29,16 @@ const FontSizeButton = function(props) {
         localStorage.setItem('fontSize', value);
     }
 
+    const Wrapper = styled.span`
+        margin-top: -2.5rem;
+        float: right;
+        margin-right: 0.75rem;
+    `;
+
     return (
-        <React.Fragment>
-            <span className="button FontSizeButton" onClick={onClickFontSizeButton}>{props.fontSize}</span>
-        </React.Fragment>
+        <Wrapper className="button" onClick={onClickFontSizeButton}>
+            {props.fontSize}
+        </Wrapper>
     );
 }
 
