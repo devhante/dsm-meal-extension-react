@@ -39,19 +39,7 @@ ul {
     background-color: #00000099;
 }
 
-#MealList-header {
-    position: relative;
-    width: 100%;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    border-bottom: 0.5px solid #FFFFFFCC;
-    
-    background-color: #00000066;
-    text-align: center;
-    
-}
-
-#MealList-icon-menu, #MealList-button-yesterday, #MealList-button-tomorrow {
+#MealList-icon-menu {
     width: 1rem;
     height: 1rem;
 }
@@ -61,52 +49,6 @@ ul {
     margin: 0.5rem;
     padding: 0.25rem;
     left: 0;
-}
-
-#MealList-content-header {
-    height: 3rem;
-    line-height: 3rem;
-    
-    text-align: center;
-}
-
-#MealList-button-yesterday, #MealList-button-tomorrow {
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-}
-
-#MealList-button-yesterday {
-    float: left;
-    margin-left: 0.25rem;
-}
-
-#MealList-button-tomorrow {
-    float: right;
-    margin-right: 0.25rem;
-}
-
-#MealList-meal-list {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-}
-
-.MealList-meal {
-    flex: 1;
-}
-
-.MealList-meal-title {
-    height: 3rem;
-    line-height: 3rem;
-    padding-bottom: 0.5rem;
-    
-    font-weight: bold;
-    text-align: center;
-}
-
-.MealList-menu-list > li {
-    padding-bottom: 0.5rem;
-    text-align: center;
 }
 
 .MealList-heart {

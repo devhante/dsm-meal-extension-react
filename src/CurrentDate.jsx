@@ -1,24 +1,21 @@
-import React, { Component } from 'react';
-import './CurrentDate.css';
+import React from 'react';
+import styled from 'styled-components';
 
-class CurrentDate extends Component {
+const Wrapper = styled.span`
+
+`;
+
+const CurrentDate = function(props) { 
+    const dateObj = new Date(props.date);
+    const month = dateObj.getMonth() + 1;
+    const date = dateObj.getDate();
+    const day = ['일', '월', '화', '수', '목', '금', '토'][dateObj.getDay()];
     
-    year = this.props.date.substring(0, 4);
-    month = this.props.date.substring(6, 7);
-    date = this.props.date.substring(9, 10);
-
-    dateObject = new Date(this.year, this.month, this.date);
-    day =  ['일', '월', '화', '수', '목', '금', '토'][this.dateObject.getDay()];
-
-    text = `${this.month}월 ${this.date}일 ${this.day}요일`;
-
-    render() {
-        return (
-            <React.Fragment>
-                <span className="CurrentDate">{this.text}</span>
-            </React.Fragment>
-        );
-    } 
-}
+    return (
+        <Wrapper>
+            {month}월 {date}일 {day}요일
+        </Wrapper>
+    );
+};
 
 export default CurrentDate;

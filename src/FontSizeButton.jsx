@@ -1,35 +1,38 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './FontSizeButton.css';
 
-class FontSizeButton extends Component {
+const FontSizeButton = function(props) {
 
-    onClickfontSizeButton = () => {
-        this.increaseSize();   
+    const onClickFontSizeButton = () => {
+        increaseSize();
     }
 
-    increaseSize = () => {
-        let newFontSize = this.getLargerFontSize(this.props.getFontSize());
-        this.props.setFontSize(newFontSize);
+    const increaseSize = () => {
+        let newFontSize = getLargerFontSize(this.props.getFontSize());
+        props.setFontSize(newFontSize);
+        setFontSizeToLocalStorage(newFontSize);
     }
 
-    getLargerFontSize = (value) => {
+    const getLargerFontSize = (value) => {
         let result;
         switch(value) {
-            case "8px": result = "12px"; break;
-            case "12px": result = "16px"; break;
-            case "16px": result = "8px"; break;
-            default: console.error("Wrong Font Size."); return;
+            case '8px': result = '12px'; break;
+            case '12px': result = '16px'; break;
+            case '16px': result = '8px'; break;
+            default: console.error('Wrong Font Size.'); return;
         }
         return result;
     }
 
-    render() {
-        return (
-            <React.Fragment>
-                <span className="button FontSizeButton" onClick={this.onClickfontSizeButton}>{this.props.getFontSize()}</span>
-            </React.Fragment>
-        );
+    const setFontSizeToLocalStorage = (value) => {
+        localStorage.setItem('fontSize', value);
     }
+
+    return (
+        <React.Fragment>
+            <span className="button FontSizeButton" onClick={onClickFontSizeButton}>{props.fontSize}</span>
+        </React.Fragment>
+    );
 }
 
 export default FontSizeButton;

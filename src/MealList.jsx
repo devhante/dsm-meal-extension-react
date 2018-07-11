@@ -1,55 +1,87 @@
 import React, { Component } from 'react';
-import FontSizeButton from './FontSizeButton';
-import CurrentDate from './CurrentDate';
+import axios from 'axios'
+
+import Header from './Header';
+import Content from './Content';
 import './MealList.css';
 
-import back from './back-white.png';
-import next from './next-white.png';
-import menu from './menu-white.png';
-import close from './close-white.png';
 import salmon from './salmon-small.png';
 
 class MealList extends Component {
     
     state = {
-        date: "2018-01-01",
-        fontSize: "12px"
+        date: new Date(),
+        fontSize: '12px',
+        menu: null
     }
 
     constructor() {
         super();
+        this.state.fontSize = this.getFontSizeFromLocalStorage();
+        this.changeHtmlFontSize(this.state.fontSize);
+        this.getMenuFromAPI((arg) => {});
+    }
 
-        let dateObject = new Date();
+    getMenuFromAPI(callback) {
+        const dateString = this.getDateStringByDateObject(this.state.date);
+        const url = `http://dsm2015.cafe24.com/meal/${dateString}`;
 
+        axios.get(url)
+        .then(response => {
+            const data = JSON.parse(JSON.stringify(response.data));
+            this.setState({ menu: data }, callback(this.state.menu)); 
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
+    getDateStringByDateObject = (dateObject) => {
         let year = dateObject.getFullYear().toString();
         let month = (dateObject.getMonth() + 1).toString();
         let date = dateObject.getDate().toString();
-
-        month = month.length == 1 ? "0" + month : month;
-        date = date.length == 1 ? "0" + date : date;
+        month = month.length == 1 ? '0' + month : month;
+        date = date.length == 1 ? '0' + date : date;
 
         let dateString = `${year}-${month}-${date}`;
-
-        this.state.date = dateString;
-        this.state.fontSize = "12px";
-        this.changeHtmlFontSize(this.state.fontSize);
+        return dateString;
     }
 
-    setFontSize = (value) => {
-        this.setState(
-            { fontSize: value },
-            () => this.changeHtmlFontSize(this.state.fontSize)
-        );
+    getDateObjectByDateString = (dateString) => {
+        let year = dateString.substring(0, 4);
+        let month = dateString.substring(6, 7) - 1;
+        let date = dateString.substring(9, 10);
+        let dateObject = new Date(year, month, date);
+        return dateObject;
     }
 
-    getFontSize = () => {
-        return this.state.fontSize;
+    getFontSizeFromLocalStorage = () => {
+        let value = localStorage.getItem('fontSize');
+        if(value == null) {
+            localStorage.setItem('fontSize', '12px');
+            value = localStorage.getItem('fontSize');
+        }
+        return value;
     }
 
     changeHtmlFontSize = (value) => {
         document.getElementsByTagName('html')[0].style.fontSize = value;
     }
 
+    setFontSize = (newFontSize) => {
+        this.setState(
+            { fontSize: newFontSize },
+            () => this.changeHtmlFontSize(this.state.fontSize)
+        );
+    }
+
+    setDate = (dateObj) => {
+        this.setState(
+            { date: dateObj },
+            () => this.getMenuFromAPI((arg) => {})
+        );
+    }
+    
     mealListStyle = {
         backgroundImage: `url(${salmon})`,
     }
@@ -58,39 +90,8 @@ class MealList extends Component {
         return (
             <div className="MealList" style={this.mealListStyle}>
                 <div id="MealList-mask">
-                    <div id="MealList-header">
-                        <div id="MealList-title">DSM Meal Extension</div>
-                        <FontSizeButton setFontSize={this.setFontSize} getFontSize={this.getFontSize} />
-                    </div>
-
-                    <div id="MealList-content">
-                        <div id="MealList-content-header">
-                            <img src={back} alt="Yesterday Button" className="button" id="MealList-button-yesterday" />
-                            <CurrentDate date={this.state.date} />
-                            <img src={next} alt="Tomorrow Button" className="button" id="MealList-button-tomorrow" />
-                        </div>
-
-                        <ul id="MealList-meal-list">
-                            <li id="MealList-breakfast" className="MealList-meal">
-                                <div className="MealList-meal-title">아침식사</div>
-                                <ul className="MealList-menu-list">
-                                    <li>로딩중...</li>
-                                </ul>
-                            </li>
-                            <li id="MealList-lunch" className="MealList-meal">
-                                <div className="MealList-meal-title">점심식사</div>
-                                <ul className="MealList-menu-list">
-                                    <li>로딩중...</li>
-                                </ul>
-                            </li>
-                            <li id="MealList-dinner" className="MealList-meal">
-                                <div className="MealList-meal-title">저녁식사</div>
-                                <ul className="MealList-menu-list">
-                                    <li>로딩중...</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+                    <Header setFontSize={this.setFontSize} fontSize={this.state.fontSize}/>
+                    <Content setDate={this.setDate} date={this.state.date} menu={this.state.menu}/>
                 </div>
             </div>
         );
