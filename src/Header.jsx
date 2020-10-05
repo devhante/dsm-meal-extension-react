@@ -2,8 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import FontSizeButton from './FontSizeButton';
 
-import menu from './menu-white.png';
-
 const Wrapper = styled.div`
     position: relative;
     width: 100%;

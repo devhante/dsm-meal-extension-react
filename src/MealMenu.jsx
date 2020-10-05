@@ -1,8 +1,7 @@
 import React from 'react';
-import ReactDOMServer from 'react-dom/server';
 import styled from 'styled-components';
 
-const Wrapper = styled.li`
+const Wrapper = styled.ul`
     flex: 1;
 `;
 
@@ -34,18 +33,16 @@ const MealMenu = function(props) {
     }
 
     const getMenuArray = () => {
-        if(props.menu == null) return null;
-        return props.menu[props.type];
+        if(props.menu === null) return null;
+        return props.menu[Object.keys(props.menu)[0]][props.type];
     }
 
     const printMenu = () => {
         const menuArray = getMenuArray();
         if(menuArray == null) return <ListElement>로딩중...</ListElement>;
-        else return (
-            menuArray.map(
-                element => (<ListElement>{element}</ListElement>)
-            )
-        );
+        else return menuArray.map((element, key) => {
+            return <ListElement key={key}>{element}</ListElement>
+        });
     }
 
     return (

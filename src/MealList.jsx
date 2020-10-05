@@ -16,7 +16,9 @@ class MealList extends Component {
     }
 
     componentDidMount() {
-        this.state.fontSize = this.getFontSizeFromLocalStorage();
+        this.setState({
+            fontSize: this.getFontSizeFromLocalStorage()
+        });
         this.changeHtmlFontSize(this.state.fontSize);
         this.updateMenu();
     }
@@ -35,10 +37,11 @@ class MealList extends Component {
 
     getMenuFromAPI(date, callback) {
         const dateString = this.getDateStringByDateObject(date);
-        const url = `http://dsm2015.cafe24.com/meal/${dateString}`;
+        const url = `https://api.dsm-dms.com/meal/${dateString}`;
 
         axios.get(url)
         .then(response => {
+            console.log(response);
             const menu = JSON.parse(JSON.stringify(response.data));
             callback(menu);
         })
@@ -55,7 +58,7 @@ class MealList extends Component {
 
     setMenuOfMonthToStorage(date) {
         let key = this.getFirstDayOfMonth(date);
-        while(key.getMonth() == date.getMonth()) {
+        while(key.getMonth() === date.getMonth()) {
             let dateObject = new Date(key);
             this.getMenuFromAPI(dateObject, (menu) => {
                 this.setMenuToStorage(dateObject, menu);
@@ -78,8 +81,8 @@ class MealList extends Component {
         let year = dateObject.getFullYear().toString();
         let month = (dateObject.getMonth() + 1).toString();
         let date = dateObject.getDate().toString();
-        month = month.length == 1 ? '0' + month : month;
-        date = date.length == 1 ? '0' + date : date;
+        month = month.length === 1 ? '0' + month : month;
+        date = date.length === 1 ? '0' + date : date;
 
         let dateString = `${year}-${month}-${date}`;
         return dateString;
@@ -87,7 +90,7 @@ class MealList extends Component {
 
     getFontSizeFromLocalStorage = () => {
         let value = localStorage.getItem('fontSize');
-        if(value == null) {
+        if(value === null) {
             localStorage.setItem('fontSize', '12px');
             value = localStorage.getItem('fontSize');
         }
